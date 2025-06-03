@@ -3,7 +3,8 @@ import {cors} from "@elysiajs/cors"
 import {swagger} from "@elysiajs/swagger"
 import { staticPlugin } from "@elysiajs/static";
 import {jwt} from "@elysiajs/jwt"; 
-import customerController from "./controller/customerController";
+import customerController from "./controller/customerController";//export defaulf
+import { Bookcontroller } from "./controller/BookController"; // import const book 
 const app = new Elysia()
 .use(cors())
 .use(swagger())
@@ -140,6 +141,8 @@ const user = {
     const file = Bun.file("test.txt")
     return file.text()
   })
+
+  .post("/api/book/create",Bookcontroller.create)
   .listen(3001);
 
 console.log(

@@ -141,8 +141,9 @@ const user = {
     const file = Bun.file("test.txt")
     return file.text()
   })
-
+  .get('/api/showdata',Bookcontroller.list)
   .post("/api/book/create",Bookcontroller.create)
+  
   .listen(3001);
 
 console.log(

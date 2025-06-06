@@ -141,10 +141,8 @@ const user = {
     const file = Bun.file("test.txt")
     return file.text()
   })
-// api with database connection
+
   .post("/api/book/create",Bookcontroller.create)
-  .get("api/book/data",Bookcontroller.list)
-  .put("api/book/update/:id",Bookcontroller.update) 
   .listen(3001);
 
 console.log(

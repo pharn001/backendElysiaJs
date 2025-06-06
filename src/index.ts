@@ -3,6 +3,8 @@ import {cors} from "@elysiajs/cors"
 import {swagger} from "@elysiajs/swagger"
 import { staticPlugin } from "@elysiajs/static";
 import {jwt} from "@elysiajs/jwt"; 
+import customerController from "./controller/customerController";//export defaulf
+import { Bookcontroller } from "./controller/BookController"; // import const book 
 const app = new Elysia()
 .use(cors())
 .use(swagger())
@@ -28,6 +30,27 @@ const user = {
    })
    return {token:token}
 })
+// ເຊັກໂທເຄັ້ນ ຜ່ານ headers ຈາກ font-end
+.get('/info', async ({jwt,request}) =>{
+  if(request.headers.get('Authorization') === null){
+    return {message:" no Authorization"}
+  }
+  const token = request.headers.get("Authorization") ?? "";
+  if(token === ""){
+    return {message:"no Auth"}
+  }
+  const payload = await jwt.verify(token);
+  return {
+    message:"Hello ElysiaJS",
+    payload: payload
+  }
+})
+// customer controller
+.get("/customer", customerController.list)
+.post("/customer",customerController.create)
+.put("/customer/:id",customerController.update)
+.delete("/customer/:id",customerController.remove)
+
 // get a data in cookie 
 .get("/profile", ({jwt, cookie : {auth}}) =>{
   const user = jwt.verify(auth.value)
@@ -118,6 +141,10 @@ const user = {
     const file = Bun.file("test.txt")
     return file.text()
   })
+// api with database connection
+  .post("/api/book/create",Bookcontroller.create)
+  .get("api/book/data",Bookcontroller.list)
+  .put("api/book/update/:id",Bookcontroller.update) 
   .listen(3001);
 
 console.log(

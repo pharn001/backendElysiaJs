@@ -46,6 +46,17 @@ export const Bookcontroller = {
       console.log(err)
       return err
     }
+  },
+  delete : async ({params}:{params:{id:string}})=>{
+    try {
+      await prisma.book.delete({
+        where:{id:params.id}
+      })
+      return {
+        message:"delete success!"
+      }
+    } catch (error) {
+      return error
+    }
   }
-  
 }

@@ -17,5 +17,8 @@ datasource db {
 model Book {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
-  price Int    
+  price Int   
+  description String?
+  isdn String?
+  createAt DateTime? @default(now())
 }

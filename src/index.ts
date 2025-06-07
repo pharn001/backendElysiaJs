@@ -141,9 +141,22 @@ const user = {
     const file = Bun.file("test.txt")
     return file.text()
   })
-  .get('/api/showdata',Bookcontroller.list)
+
+  // ລວມ group api ທີ່ຢູ່ໃນ ຫົວຂໍ້ດຽວກັນ ຫຼື ຈັດລະບຽບໃຫ້ api 
+  .group("/api/book", app => app
+    .post("/",Bookcontroller.create)
+    .get("/",Bookcontroller.list)
+    .put("/:id",Bookcontroller.update)
+    .delete("/:id",Bookcontroller.delete)
+  )
+// api with database connection
+
+/*
   .post("/api/book/create",Bookcontroller.create)
-  
+  .get("api/book/data",Bookcontroller.list)
+  .put("api/book/update/:id",Bookcontroller.update) 
+  .delete("api/book/delete/:id",Bookcontroller.delete)
+*/
   .listen(3001);
 
 console.log(

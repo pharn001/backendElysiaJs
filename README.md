@@ -25,11 +25,16 @@ npm install prisma --save-dev
 ```bash
  npx prisma init --datasource-provider mongodb --output ../generated/prisma
 ```
+## ເພີ່ມໂມເດວໃນ ຖານຂໍ້ມູນ MongoDB  
+```bash
+bunx prisma db push
 
+```
 ## run ຄຳສັ່ງ prisma
 ```bash
 bunx prisma generate
 ```
+
 # ✅ ขั้นตอน Merge master เข้า main
 ## 1 เช็คว่าอยู่ที่ branch main
 

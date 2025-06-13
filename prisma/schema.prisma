@@ -22,3 +22,11 @@ model Book {
   isdn String?
   createAt DateTime? @default(now())
 }
+model admin{
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    name String
+    username String
+    password String
+    level String @default("admin")
+    satus String @default("active")
+}

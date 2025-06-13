@@ -5,6 +5,7 @@ import { staticPlugin } from "@elysiajs/static";
 import {jwt} from "@elysiajs/jwt"; 
 import customerController from "./controller/customerController";//export defaulf
 import { Bookcontroller } from "./controller/BookController"; // import const book 
+import { AdminController } from "./controller/AdminController";
 const app = new Elysia()
 .use(cors())
 .use(swagger())
@@ -157,6 +158,12 @@ const user = {
   .put("api/book/update/:id",Bookcontroller.update) 
   .delete("api/book/delete/:id",Bookcontroller.delete)
 */
+
+// admin controller
+  .group("/api/admin", app => app 
+    .post("/create", AdminController.create)
+    .post("/signin", AdminController.signin)
+  )
   .listen(3001);
 
 console.log(

@@ -163,6 +163,7 @@ const user = {
   .group("/api/admin", app => app 
     .post("/create", AdminController.create)
     .post("/signin", AdminController.signin)
+    .get("/info", AdminController.info)
   )
   .listen(3001);
 

@@ -42,5 +42,30 @@ export const AdminController = {
         } catch (error) {
             return error
         }
+    },
+    info: async({request, jwt}:{
+        request:{
+            headers:any
+        },
+        jwt:any
+    })=>{
+        try {
+            console.log(request.headers.get('Authorization'))
+            const token = request.headers.get('Authorization').replace('Bearer ', '');
+            const payload = await jwt.verify(token)
+            const admin = await prisma.admin.findUnique({
+                where:{
+                    id: payload.id
+                },
+                select:{
+                    name:true,
+                    level:true,
+                }
+            })
+            return admin;
+        } catch (error) {
+            return error;
+            
+        }
     }
 }

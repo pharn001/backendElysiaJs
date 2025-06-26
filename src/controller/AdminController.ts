@@ -2,6 +2,17 @@ import { PrismaClient } from "../../generated/prisma";
 import type {AdminInterface} from "../interfece/AdminInterface"
 const prisma = new PrismaClient();
 
+const GetAdmintoken = async (request:any,jwt:any)=>{
+  const authHeader = request.headers.get('Authorization');
+
+  if (!authHeader) {
+    throw new Error('Authorization header is missing');
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+  const payload = await jwt.verify(token);
+  return payload.id;
+}
 export const AdminController = {
     create: async ({ body } : {body:AdminInterface}) =>{
         try {
@@ -50,16 +61,15 @@ export const AdminController = {
         jwt:any
     })=>{
         try {
-            console.log(request.headers.get('Authorization'))
-            const token = request.headers.get('Authorization').replace('Bearer ', '');
-            const payload = await jwt.verify(token)
+           const adminid = await GetAdmintoken(request,jwt)
             const admin = await prisma.admin.findUnique({
                 where:{
-                    id: payload.id
+                    id:adminid 
                 },
                 select:{
                     name:true,
                     level:true,
+                    username:true
                 }
             })
             return admin;
@@ -67,5 +77,41 @@ export const AdminController = {
             return error;
             
         }
+    },
+    update: async ({body,jwt,request}:
+        {
+            body:AdminInterface,
+            jwt:any,
+            request:any
+        }
+    )=>{
+        try {
+            console.log(request.headers.get('Authorization'))
+            const adminid = await GetAdmintoken(request,jwt)
+            const oldAdmin = await prisma.admin.findUnique({
+                where: {
+                    id: adminid
+                }
+            })
+
+            if (!oldAdmin) {
+                return new Response("Admin not found", { status: 404 });
+            }
+            // update the admin
+           await prisma.admin.update({
+                data:{
+                    name: body.name,
+                    username: body.username,
+                    password: body.password ?? oldAdmin?.password
+                }
+                ,where:{
+                    id:adminid
+                }
+            })
+            return {message: "Admin updated successfully" };
+        } catch (error) {
+            return error;
+        }
     }
+
 }

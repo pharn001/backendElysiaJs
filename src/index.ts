@@ -165,6 +165,7 @@ const user = {
     .post("/signin", AdminController.signin)
     .get("/info", AdminController.info)
     .put("/update", AdminController.update)
+    .get("/list", AdminController.list)
   )
   .listen(3001);
 

@@ -27,6 +27,6 @@ model admin{
     name String
     username String
     password String
-    level String @default("admin")
+    level String @default("Administrator")
     satus String @default("active")
 }

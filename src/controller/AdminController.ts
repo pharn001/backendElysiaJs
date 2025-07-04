@@ -112,6 +112,25 @@ export const AdminController = {
         } catch (error) {
             return error;
         }
+    },
+    list: async()=>{
+        try {
+            const admin = await prisma.admin.findMany({
+                select:{
+                    id:true,
+                    name:true,
+                    username:true,
+                    level:true
+                },
+                orderBy:{
+                    name:'asc'
+                }
+            })
+            return admin;
+        } catch (error) {
+            return error;
+            
+        }
     }
 
 }

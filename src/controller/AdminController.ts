@@ -8,7 +8,7 @@ const GetAdmintoken = async (request:any,jwt:any)=>{
   if (!authHeader) {
     throw new Error('Authorization header is missing');
   }
-
+ 
   const token = authHeader.replace('Bearer ', '');
   const payload = await jwt.verify(token);
   return payload.id;

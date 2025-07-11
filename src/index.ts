@@ -167,6 +167,7 @@ const user = {
     .put("/update", AdminController.update)
     .get("/list", AdminController.list)
     .put("/update-data", AdminController.updateData)
+    .delete("/remove/:id",AdminController.remove)
   )
   .listen(3001);
 

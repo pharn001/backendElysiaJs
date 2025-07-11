@@ -10,6 +10,7 @@ export const Bookcontroller = {
             data:{
                 name:body.name,
                 price:body.price
+              
             }
         })
         return book
@@ -35,7 +36,10 @@ export const Bookcontroller = {
       const book = await prisma.book.update({
         data:{
           name:body.name,
-          price:body.price
+          price:body.price,
+          description:body.descriptsion,
+                isdn:body.isdn,
+                createAt:body.createAt
         },
         where:{
           id:params.id

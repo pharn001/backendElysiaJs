@@ -8,22 +8,24 @@ export const Bookcontroller = {
     try{
         const book = await prisma.book.create({
             data:{
-                name:body.name,
-                price:body.price
-              
+              name:body.name,
+              isdn:body.isdn,
+                price:body.price,
+              description:body.description
             }
         })
         return book
-    }catch(err){
-      console.log(err);
-      return {error:err}
+    }catch(error){
+      console.log(error);
+      return {error}
     }
   } ,
   list :async () =>{
     try {
       return await prisma.book.findMany()
     }catch(err){
-      return err;
+       return err
+     
     }
   },
   update : async ({params,body}:{
@@ -37,7 +39,7 @@ export const Bookcontroller = {
         data:{
           name:body.name,
           price:body.price,
-          description:body.descriptsion,
+          description:body.description,
                 isdn:body.isdn,
                 createAt:body.createAt
         },
@@ -46,9 +48,9 @@ export const Bookcontroller = {
         }
       })
       return book;
-    }catch(err){
-      console.log(err)
-      return err
+    }catch(error){
+      console.log(error)
+      return error
     }
   },
   delete : async ({params}:{params:{id:string}})=>{

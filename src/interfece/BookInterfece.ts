@@ -2,7 +2,7 @@ export interface BookInterface {
     id:string,
     name:string,
     price:number,
-    descriptsion:string,
+    description:string,
     isdn : string,
     createAt: Date
 }

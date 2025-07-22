@@ -21,6 +21,7 @@ model Book {
   description String?
   isdn String?
   createAt DateTime? @default(now())
+  image String?
 }
 model admin{
     id String @id @default(auto()) @map("_id") @db.ObjectId

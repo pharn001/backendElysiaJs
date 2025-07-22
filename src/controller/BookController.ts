@@ -10,10 +10,12 @@ export const Bookcontroller = {
             data:{
               name:body.name,
               isdn:body.isdn,
-                price:body.price,
-              description:body.description
+              price:parseInt( body.price.toString() ),
+              description:body.description,
+              image:body.image.name,
             }
         })
+        Bun.write("public/upload/" + body.image.name, body.image)
         return book
     }catch(error){
       console.log(error);
@@ -22,7 +24,13 @@ export const Bookcontroller = {
   } ,
   list :async () =>{
     try {
-      return await prisma.book.findMany()
+      return await prisma.book.findMany(
+        {
+          orderBy: {
+            createAt: 'asc'
+          }
+        }
+      )
     }catch(err){
        return err
      
@@ -40,8 +48,7 @@ export const Bookcontroller = {
           name:body.name,
           price:body.price,
           description:body.description,
-                isdn:body.isdn,
-                createAt:body.createAt
+          isdn:body.isdn,          
         },
         where:{
           id:params.id

@@ -9,7 +9,13 @@ import { AdminController } from "./controller/AdminController";
 const app = new Elysia()
 .use(cors())
 .use(swagger())
-.use(staticPlugin())
+.use(staticPlugin(
+  {
+    prefix: "/public/upload",    //URL prefix ที่จะใช้เรียกไฟล์ เช่น http://localhost:3001/public/upload/xxx.png
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+    assets:'./public/upload' //  assets	ตำแหน่งโฟลเดอร์ในเครื่องเซิร์ฟเวอร์ที่เก็บไฟล์จริง (./public/upload)
+  }
+))
 .use(jwt({
   name:"jwt",
   secret:"secret"

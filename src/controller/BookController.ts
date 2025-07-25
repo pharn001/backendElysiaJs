@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 export const Bookcontroller = {
   create : async ({body} :{  body:  BookInterface})=>{
     try{
+      const imageName = body.image.name; // get file name from body
+      const image = body.image; // opject File  
         const book = await prisma.book.create({
             data:{
               name:body.name,
@@ -15,7 +17,7 @@ export const Bookcontroller = {
               image:body.image.name,
             }
         })
-        Bun.write("public/upload/" + body.image.name, body.image)
+        Bun.write("public/upload/" + imageName, image)
         return book
     }catch(error){
       console.log(error);
@@ -43,12 +45,33 @@ export const Bookcontroller = {
     body:BookInterface
   }) =>{
     try{
+      const nameImg= body.image.name ?? "";
+      const image = body.image ?? null;
+  const oldImage= await prisma.book.findMany({
+          where: {
+            id: params.id
+          }
+        })
+      if(nameImg !== ""){
+     
+
+
+        const file = Bun.file("public/upload/" + oldImage[0].image);
+        if(await file.exists()){
+          await file.delete()
+        }
+        Bun.write("public/upload/" + nameImg, image) 
+      }
+
+
       const book = await prisma.book.update({
+
         data:{
           name:body.name,
-          price:body.price,
+          price: parseInt(body.price.toString()),
           description:body.description,
-          isdn:body.isdn,          
+          isdn:body.isdn,    
+          image:nameImg ?? oldImage[0].image  
         },
         where:{
           id:params.id

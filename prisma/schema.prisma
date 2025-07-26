@@ -31,3 +31,10 @@ model admin{
     level String @default("Administrator")
     satus String @default("active")
 }
+model member{
+   id String @id @default(auto()) @map("_id") @db.ObjectId
+   phone String
+    name String
+    password String
+    status String @default("active")
+}

@@ -48,7 +48,7 @@ export const Bookcontroller = {
       const nameImg= body.image.name ?? "";
       const image = body.image ?? null;
   const oldImage= await prisma.book.findMany({
-          where: {
+          where: { 
             id: params.id
           }
         })

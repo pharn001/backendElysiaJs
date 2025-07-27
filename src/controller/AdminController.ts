@@ -1,4 +1,3 @@
-import { request } from "http";
 import { PrismaClient } from "../../generated/prisma";
 import type { AdminInterface } from "../interfece/AdminInterface"
 const prisma = new PrismaClient();

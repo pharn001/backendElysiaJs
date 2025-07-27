@@ -6,6 +6,8 @@ import {jwt} from "@elysiajs/jwt";
 import customerController from "./controller/customerController";//export defaulf
 import { Bookcontroller } from "./controller/BookController"; // import const book 
 import { AdminController } from "./controller/AdminController";
+import { MemberController } from "./controller/MemberController";
+import { CartController } from "./controller/CartController";
 const app = new Elysia()
 .use(cors())
 .use(swagger())
@@ -174,6 +176,15 @@ const user = {
     .get("/list", AdminController.list)
     .put("/update-data/:id", AdminController.updateData)
     .delete("/remove/:id",AdminController.remove)
+  )
+  .group("/api/member", app => app
+    .post("/register", MemberController.signup)
+    .post("/signin", MemberController.sigin)
+    .get("/info", MemberController.info)
+  )
+  .group("/api/cart", app => app
+    .post("/add", CartController.add)
+    .get("/list/:memberId",CartController.list)
   )
   .listen(3001);
 

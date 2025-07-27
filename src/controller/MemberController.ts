@@ -26,7 +26,7 @@ export const MemberController = {
                     name:body.username
                 },
                 select:{
-                    id:true,name:true
+                    id:true
                 }
             })
             if(!member) return new Response("Member not found",{status:404});

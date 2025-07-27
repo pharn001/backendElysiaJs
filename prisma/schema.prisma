@@ -22,6 +22,7 @@ model Book {
   isdn String?
   createAt DateTime? @default(now())
   image String?
+  carts cart[]
 }
 model admin{
     id String @id @default(auto()) @map("_id") @db.ObjectId
@@ -40,7 +41,8 @@ model member{
 }
 model cart{
     id String @id @default(auto()) @map("_id" ) @db.ObjectId
-    bookId String
+    bookId String  @db.ObjectId
     memberId String
     qty Int  
+    book Book @relation(fields: [bookId], references: [id])
 }

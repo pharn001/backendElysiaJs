@@ -41,8 +41,12 @@ export const CartController = {
             const carts = await prisma.cart.findMany({
                 where: {
                     memberId: params.memberId
-                }
-               
+                },
+               select:{
+                   id:true,
+                   qty:true,
+                   book:true,
+               }
             })
             return carts;
         } catch (error) {

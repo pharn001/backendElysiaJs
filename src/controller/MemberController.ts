@@ -61,6 +61,7 @@ export const MemberController = {
             })
             return member;
         } catch (error) {
+            console.log(error)
             return error;
 
         }

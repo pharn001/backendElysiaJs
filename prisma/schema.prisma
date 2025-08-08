@@ -34,8 +34,8 @@ model admin{
 }
 model member{
    id String @id @default(auto()) @map("_id") @db.ObjectId
-   phone String
-    username String @unique
+    phone String
+    username String? @unique
     password String
     status String @default("active")
     address String?

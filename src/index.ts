@@ -188,7 +188,7 @@ const user = {
     .delete("/delete/:id",CartController.delete)
     .put("/upqty/:id",CartController.upQty)
     .put("/downqty/:id",CartController.downQty)
-    .post("cart/confrim",CartController.cartconfrim)
+    .post("/confrim",CartController.cartconfrim)
   )
   .listen(3001);
 

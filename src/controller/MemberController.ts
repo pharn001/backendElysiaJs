@@ -9,7 +9,7 @@ export const MemberController = {
                 data:{                   
                     phone: body.phone,
                     password: body.password,
-                    name: body.username
+                    username: body.username
                 }
             })
             return create
@@ -23,7 +23,7 @@ export const MemberController = {
                 where:{
                     phone: body.phone,
                     password:body.password,
-                    name:body.username
+                    username:body.username
                 },
                 select:{
                     id:true

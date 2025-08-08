@@ -16,7 +16,7 @@
   "devDependencies": {
     "@types/node": "^22.15.29",
     "bun-types": "latest",
-    "prisma": "^6.9.0",
+    "prisma": "^6.13.0",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   },

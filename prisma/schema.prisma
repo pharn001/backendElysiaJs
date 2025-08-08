@@ -35,9 +35,11 @@ model admin{
 model member{
    id String @id @default(auto()) @map("_id") @db.ObjectId
    phone String
-    name String @unique
+    username String @unique
     password String
     status String @default("active")
+    address String?
+    name String?
 }
 model cart{
     id String @id @default(auto()) @map("_id" ) @db.ObjectId

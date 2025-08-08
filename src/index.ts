@@ -185,6 +185,10 @@ const user = {
   .group("/api/cart", app => app
     .post("/add", CartController.add)
     .get("/list/:memberId",CartController.list)
+    .delete("/delete/:id",CartController.delete)
+    .put("/upqty/:id",CartController.upQty)
+    .put("/downqty/:id",CartController.downQty)
+    .post("cart/confrim",CartController.cartconfrim)
   )
   .listen(3001);
 

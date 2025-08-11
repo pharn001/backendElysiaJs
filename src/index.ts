@@ -189,6 +189,8 @@ const user = {
     .put("/upqty/:id",CartController.upQty)
     .put("/downqty/:id",CartController.downQty)
     .post("/confrim",CartController.cartconfrim)
+    .post("/file",CartController.uploadfile)
+    .post("/order",CartController.order)
   )
   .listen(3001);
 

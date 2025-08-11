@@ -15,36 +15,68 @@ datasource db {
 }
 
 model Book {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  price Int   
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  price       Int
   description String?
-  isdn String?
-  createAt DateTime? @default(now())
-  image String?
-  carts cart[]
+  isdn        String?
+  createAt    DateTime?     @default(now())
+  image       String?
+  carts       cart[]
+  orderDetail orderDetail[]
 }
-model admin{
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-    name String
-    username String @unique
-    password String
-    level String @default("Administrator")
-    satus String @default("active")
+
+model admin {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  username String @unique
+  password String
+  level    String @default("Administrator")
+  satus    String @default("active")
 }
-model member{
-   id String @id @default(auto()) @map("_id") @db.ObjectId
-    phone String
-    username String? @unique
-    password String
-    status String @default("active")
-    address String?
-    name String?
+
+model member {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  phone    String
+  username String? @unique
+  password String
+  status   String  @default("active")
+  address  String?
+  name     String?
+
+  order order[]
 }
-model cart{
-    id String @id @default(auto()) @map("_id" ) @db.ObjectId
-    bookId String  @db.ObjectId
-    memberId String
-    qty Int  
-    book Book @relation(fields: [bookId], references: [id])
+
+model cart {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  bookId   String @db.ObjectId
+  memberId String
+  qty      Int
+  book     Book   @relation(fields: [bookId], references: [id])
+}
+
+model order {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  memberId        String        @db.ObjectId
+  createAt        DateTime
+  Member          member        @relation(fields: [memberId], references: [id])
+  slipImage       String
+  status          String        @default("")
+  trackcode       String        @default("")
+  express         String        @default("")
+  remark          String        @default("")
+  customerName    String
+  customerPhone   String
+  customeraddress String
+  orderDetail     orderDetail[]
+}
+
+model orderDetail {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  BookId  String @db.ObjectId
+  Book    Book   @relation(fields: [orderId], references: [id])
+  price   Int
+  qty     Int
+  orderId String @db.ObjectId
+  Order   order  @relation(fields: [orderId], references: [id])
 }

@@ -1,7 +1,7 @@
 import { CartInterface } from "../interfece/CartInterface";
 import { PrismaClient } from "../../generated/prisma";
-import { status } from "elysia";
-import { Param } from "../../generated/prisma/runtime/library";
+import { file } from "bun";
+
 const prisma = new PrismaClient();
 
 export const CartController = {
@@ -139,16 +139,16 @@ export const CartController = {
         }
     }) => {
         try {
-            const token = request.headers.get("Authorization").replace("Bearer ", "");    
-           
+            const token = request.headers.get("Authorization").replace("Bearer ", "");
+
             const payload = await jwt.verify(token);
-            
-             // Check if payload exists and has required fields
+
+            // Check if payload exists and has required fields
             if (!payload) {
                 set.status = 401;
                 return { error: "Invalid token" };
             }
-               
+
             await prisma.member.update({
                 data: {
                     name: body.name,
@@ -161,8 +161,83 @@ export const CartController = {
             return { message: "successFully!" }
         } catch (error) {
             set.status = 500;
-         console.log(error)
+            console.log(error)
             return error;
+        }
+    },
+    uploadfile: async ({ body }: {
+        body: {
+            file: File
+        }
+    }
+    ) => {
+        try {
+            const file = body.file;
+            if (!file) return { error: "No file uploaded" };
+            const uploadDir = 'public/upload/';
+            await Bun.write(uploadDir + file.name, file);
+
+        } catch (error) {
+            return error
+        }
+    },
+    order: async ({ body, set, request, jwt }: {
+        body: {
+            slipName: string
+        },
+        set: {
+            status: number
+        },
+        request: any, jwt: any
+    }) => {
+        try {
+            
+            const token = request.headers.get("Authorization").replace("Bearer ", "")
+            const payload = await jwt.verify(token)
+            const memberI = payload.id
+            const findeCarts = await prisma.cart.findMany({
+                where: {
+                    memberId: memberI
+                }, select: {
+                    qty: true,
+                    book: true
+                }
+            })
+            const member = await prisma.member.findUnique({
+                where: { id: memberI }
+            })
+            if (!member) {
+                set.status = 404;
+                return { error: "Member not found" };
+            }
+            const order = await prisma.order.create({
+                data: {
+                    createAt: new Date(),
+                    trackcode: "",
+                    customerName: member.name ?? "",
+                    customerPhone: member.phone ?? "",
+                    customeraddress: member.address ?? "",
+                    memberId: memberI,
+                    slipImage: body.slipName
+                }
+            })
+            for (let i = 0; i < findeCarts.length; i++) {
+                const cart = findeCarts[i];
+
+                await prisma.orderDetail.create({
+                    data: {
+                        price: cart.book.price,
+                        qty: cart.qty,
+                        BookId: cart.book.id,
+                        orderId: order.id
+                    }
+                })
+            }
+            return { message: "success" }
+        } catch (error) {
+         
+            set.status = 500;
+            return error
         }
     }
 }

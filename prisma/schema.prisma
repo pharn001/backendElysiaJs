@@ -74,7 +74,7 @@ model order {
 model orderDetail {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
   BookId  String @db.ObjectId
-  Book    Book   @relation(fields: [orderId], references: [id])
+  Book    Book   @relation(fields: [BookId], references: [id])
   price   Int
   qty     Int
   orderId String @db.ObjectId

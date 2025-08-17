@@ -56,3 +56,8 @@ git merge master
 ```bash
 git push origin main
 ```
+
+### .env
+```bash
+mongodb+srv://younothing269:nothing@my-custer.t5yqyda.mongodb.net/db_next_bun?retryWrites=true&w=majority&appName=my-custer
+```

@@ -233,6 +233,9 @@ export const CartController = {
                     }
                 })
             }
+            await prisma.cart.deleteMany({
+                where:{memberId:memberI}
+            })
             return { message: "success" }
         } catch (error) {
          

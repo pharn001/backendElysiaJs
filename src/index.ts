@@ -8,6 +8,7 @@ import { Bookcontroller } from "./controller/BookController"; // import const bo
 import { AdminController } from "./controller/AdminController";
 import { MemberController } from "./controller/MemberController";
 import { CartController } from "./controller/CartController";
+import { OrderController } from "./controller/OrderController"; 
 const app = new Elysia()
 .use(cors())
 .use(swagger())
@@ -181,6 +182,7 @@ const user = {
     .post("/register", MemberController.signup)
     .post("/signin", MemberController.sigin)
     .get("/info", MemberController.info)
+    .get("/history",MemberController.history)
   )
   .group("/api/cart", app => app
     .post("/add", CartController.add)
@@ -191,6 +193,9 @@ const user = {
     .post("/confrim",CartController.cartconfrim)
     .post("/file",CartController.uploadfile)
     .post("/order",CartController.order)
+  )
+  .group("/api/order", app =>app
+    .get("/list",OrderController.list)
   )
   .listen(3001);
 

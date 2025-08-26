@@ -196,6 +196,9 @@ const user = {
   )
   .group("/api/order", app =>app
     .get("/list",OrderController.list)
+    .put("/cancel/:id",OrderController.cancel)
+    .put("/paid/:id",OrderController.paid)
+    .put("/send",OrderController.send)
   )
   .listen(3001);
 

@@ -1,6 +1,5 @@
 import { CartInterface } from "../interfece/CartInterface";
 import { PrismaClient } from "../../generated/prisma";
-import { file } from "bun";
 
 const prisma = new PrismaClient();
 
@@ -174,7 +173,7 @@ export const CartController = {
         try {
             const file = body.file;
             if (!file) return { error: "No file uploaded" };
-            const uploadDir = 'public/upload/';
+            const uploadDir = 'public/upload/slip/';
             await Bun.write(uploadDir + file.name, file);
 
         } catch (error) {

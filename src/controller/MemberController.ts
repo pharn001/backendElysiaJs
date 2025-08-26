@@ -54,7 +54,7 @@ export const MemberController = {
                     id: payload.id
                 },
                 select: {
-                    name: true,
+                    username: true,
                     id: true,
 
                 }
@@ -91,7 +91,8 @@ export const MemberController = {
                     remark: true,
                     customeraddress: true,
                     customerName: true,
-                    customerPhone: true
+                    customerPhone: true,
+                    status: true,
                 }
             })
             console.log(order)

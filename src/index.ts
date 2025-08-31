@@ -1,75 +1,88 @@
 import { Elysia } from "elysia";
-import {cors} from "@elysiajs/cors"
-import {swagger} from "@elysiajs/swagger"
+import { cors } from "@elysiajs/cors"
+import { swagger } from "@elysiajs/swagger"
 import { staticPlugin } from "@elysiajs/static";
-import {jwt} from "@elysiajs/jwt"; 
+import { jwt } from "@elysiajs/jwt";
 import customerController from "./controller/customerController";//export defaulf
 import { Bookcontroller } from "./controller/BookController"; // import const book 
 import { AdminController } from "./controller/AdminController";
 import { MemberController } from "./controller/MemberController";
 import { CartController } from "./controller/CartController";
-import { OrderController } from "./controller/OrderController"; 
+import { OrderController } from "./controller/OrderController";
+import { DashboardController } from "./controller/DashboardController";
+
+// middleware 
+const checkSignin = async ({ jwt, request }: { jwt: any, request: { headers: any } }) => {
+  const token = request.headers.get("Authorization")?.split("")[1]
+  if (!token) return new Response("Unauthorized", { status: 401 })
+    const payload = await jwt.verify(token)
+    if (!payload) return new Response("Unauthorized", { status: 401 })
+}
+
 const app = new Elysia()
-.use(cors())
-.use(swagger())
-.use(staticPlugin(
-  {
-    prefix: "/public/upload",    //URL prefix ที่จะใช้เรียกไฟล์ เช่น http://localhost:3001/public/upload/xxx.png
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    assets:'./public/upload' //  assets	ตำแหน่งโฟลเดอร์ในเครื่องเซิร์ฟเวอร์ที่เก็บไฟล์จริง (./public/upload)
-  }
-))
-.use(jwt({
-  name:"jwt",
-  secret:"secret"
-}))
+  .use(cors())
+  .use(swagger())
+  .use(staticPlugin(
+    {
+      prefix: "/public/upload",    //URL prefix ที่จะใช้เรียกไฟล์ เช่น http://localhost:3001/public/upload/xxx.png
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      assets: './public/upload' //  assets	ตำแหน่งโฟลเดอร์ในเครื่องเซิร์ฟเวอร์ที่เก็บไฟล์จริง (./public/upload)
+    }
+  ))
+
+
+  .use(jwt({
+    name: "jwt",
+    secret: "secret"
+  }))
+
 
 // test jwt token
-.post("/login",async ({jwt,cookie: {auth}}) =>{
-const user = {
-  id:1,
-  name:"who name",
-  level:"admin"
-}
+.post("/login", async ({ jwt, cookie: { auth } }) => {
+  const user = {
+    id: 1,
+    name: "who name",
+    level: "admin"
+  }
   const token = await jwt.sign(user)
-   auth.set({
-    value:token,
-    httpOnly:true,
-    secure:true,
+  auth.set({
+    value: token,
+    httpOnly: true,
+    secure: true,
     maxAge: 60 * 60 * 24 * 7 // 1 week
-   })
-   return {token:token}
+  })
+  return { token: token }
 })
-// ເຊັກໂທເຄັ້ນ ຜ່ານ headers ຈາກ font-end
-.get('/info', async ({jwt,request}) =>{
-  if(request.headers.get('Authorization') === null){
-    return {message:" no Authorization"}
-  }
-  const token = request.headers.get("Authorization") ?? "";
-  if(token === ""){
-    return {message:"no Auth"}
-  }
-  const payload = await jwt.verify(token);
-  return {
-    message:"Hello ElysiaJS",
-    payload: payload
-  }
-})
-// customer controller
-.get("/customer", customerController.list)
-.post("/customer",customerController.create)
-.put("/customer/:id",customerController.update)
-.delete("/customer/:id",customerController.remove)
+  // ເຊັກໂທເຄັ້ນ ຜ່ານ headers ຈາກ font-end
+  .get('/info', async ({ jwt, request }) => {
+    if (request.headers.get('Authorization') === null) {
+      return { message: " no Authorization" }
+    }
+    const token = request.headers.get("Authorization") ?? "";
+    if (token === "") {
+      return { message: "no Auth" }
+    }
+    const payload = await jwt.verify(token);
+    return {
+      message: "Hello ElysiaJS",
+      payload: payload
+    }
+  })
+  // customer controller
+  .get("/customer", customerController.list)
+  .post("/customer", customerController.create)
+  .put("/customer/:id", customerController.update)
+  .delete("/customer/:id", customerController.remove)
 
-// get a data in cookie 
-.get("/profile", ({jwt, cookie : {auth}}) =>{
-  const user = jwt.verify(auth.value)
-   return user
-})
-.post("/logout", ({jwt, cookie:{auth}}) =>{
-  auth.remove()
-  return {message:"remove cookied"}
-})
+  // get a data in cookie 
+  .get("/profile", ({ jwt, cookie: { auth } }) => {
+    const user = jwt.verify(auth.value)
+    return user
+  })
+  .post("/logout", ({ jwt, cookie: { auth } }) => {
+    auth.remove()
+    return { message: "remove cookied" }
+  })
   .get("/", () => "Hello Elysia")
   .get("/hello", () => "Hello api  Elysia")
   .get("json-data", () => {
@@ -87,14 +100,14 @@ const user = {
     return { id: params.id, name: params.name }
   })
   // .get("book/get",{})
-// post method
-  .post("/book/create", ({body}:{
-      body:{
-      id:string,
-      title:string,
-      price:number
+  // post method
+  .post("/book/create", ({ body }: {
+    body: {
+      id: string,
+      title: string,
+      price: number
     }
-  })=>{
+  }) => {
     return {
       id: body.id,
       title: body.title,
@@ -104,101 +117,104 @@ const user = {
   })
 
   // put method
-  .put("/book/update/:id",({ params, body }:{
-    params:{id:string},
-    body:{
-      title:string,
-      price:number
+  .put("/book/update/:id", ({ params, body }: {
+    params: { id: string },
+    body: {
+      title: string,
+      price: number
     }
-  })=>{
-    
+  }) => {
+
     return {
       body
     }
   })
 
   // delete
-  .delete("book/delete/:id",({params}:{
-    params:{
-      id:string
+  .delete("book/delete/:id", ({ params }: {
+    params: {
+      id: string
     }
-  })=>{
+  }) => {
     return {
-      id:params.id
+      id: params.id
     }
   })
 
   // upload file
-  .post("/upload-file",({ body }:{
-    body :{
-      file:File
-     }
-  }) =>{
+  .post("/upload-file", ({ body }: {
+    body: {
+      file: File
+    }
+  }) => {
     Bun.write('public/upload/' + body.file.name, body.file)
     return {
-      massage:"upload file success!"
+      massage: "upload file success!"
     }
   })
   // white file
-  .get("/write-file", ()=>{
-    Bun.write('test.txt',"write file whit nothing")
+  .get("/write-file", () => {
+    Bun.write('test.txt', "write file whit nothing")
     return {
-      message :"success"
+      message: "success"
     }
   })
   // read file 
-  .get("read-file",()=>{
+  .get("read-file", () => {
     const file = Bun.file("test.txt")
     return file.text()
   })
 
   // ລວມ group api ທີ່ຢູ່ໃນ ຫົວຂໍ້ດຽວກັນ ຫຼື ຈັດລະບຽບໃຫ້ api 
   .group("/api/book", app => app
-    .post("/",Bookcontroller.create)
-    .get("/",Bookcontroller.list)
-    .put("/:id",Bookcontroller.update)
-    .delete("/:id",Bookcontroller.delete)
+    .post("/", Bookcontroller.create)
+    .get("/", Bookcontroller.list)
+    .put("/:id", Bookcontroller.update)
+    .delete("/:id", Bookcontroller.delete)
   )
-// api with database connection
+  // api with database connection
 
-/*
-  .post("/api/book/create",Bookcontroller.create)
-  .get("api/book/data",Bookcontroller.list)
-  .put("api/book/update/:id",Bookcontroller.update) 
-  .delete("api/book/delete/:id",Bookcontroller.delete)
-*/
+  /*
+    .post("/api/book/create",Bookcontroller.create)
+    .get("api/book/data",Bookcontroller.list)
+    .put("api/book/update/:id",Bookcontroller.update) 
+    .delete("api/book/delete/:id",Bookcontroller.delete)
+  */
 
-// admin controller
-  .group("/api/admin", app => app 
+  // admin controller
+  .group("/api/admin", app => app
     .post("/create", AdminController.create)
     .post("/signin", AdminController.signin)
     .get("/info", AdminController.info)
     .put("/update", AdminController.update)
     .get("/list", AdminController.list)
     .put("/update-data/:id", AdminController.updateData)
-    .delete("/remove/:id",AdminController.remove)
+    .delete("/remove/:id", AdminController.remove)
   )
   .group("/api/member", app => app
     .post("/register", MemberController.signup)
     .post("/signin", MemberController.sigin)
     .get("/info", MemberController.info)
-    .get("/history",MemberController.history)
+    .get("/history", MemberController.history)
   )
   .group("/api/cart", app => app
     .post("/add", CartController.add)
-    .get("/list/:memberId",CartController.list)
-    .delete("/delete/:id",CartController.delete)
-    .put("/upqty/:id",CartController.upQty)
-    .put("/downqty/:id",CartController.downQty)
-    .post("/confrim",CartController.cartconfrim)
-    .post("/file",CartController.uploadfile)
-    .post("/order",CartController.order)
+    .get("/list/:memberId", CartController.list)
+    .delete("/delete/:id", CartController.delete)
+    .put("/upqty/:id", CartController.upQty)
+    .put("/downqty/:id", CartController.downQty)
+    .post("/confrim", CartController.cartconfrim)
+    .post("/file", CartController.uploadfile)
+    .post("/order", CartController.order)
   )
-  .group("/api/order", app =>app
-    .get("/list",OrderController.list)
-    .put("/cancel/:id",OrderController.cancel)
-    .put("/paid/:id",OrderController.paid)
-    .put("/send",OrderController.send)
+  .group("/api/order", app => app
+    .get("/list", OrderController.list)
+    .put("/cancel/:id", OrderController.cancel)
+    .put("/paid/:id", OrderController.paid)
+    .put("/send", OrderController.send)
+  )
+  .group("/api/dashboard", app => app
+    .get("/list", DashboardController.list,{beforeHandler:checkSignin})
   )
   .listen(3001);
 
